@@ -19,7 +19,7 @@ df.rename(columns={'Start date': 'Date', 'Client': 'Analytic Account',
 pt = pd.pivot_table(df, index=['Date', 'Description', 'Analytic Account', 'Product'], values=[
                     'Quantity'], aggfunc='sum')
 
-pt['General Account'] = '4200'
+pt['General Account'] = '40005'
 
 
 flattened = pd.DataFrame(pt.to_records())
