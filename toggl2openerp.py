@@ -2,6 +2,8 @@
 
 import pandas as pd
 import sys
+import numpy as np
+from datetime import datetime, timedelta
 
 args = sys.argv
 input_file = args[1]
@@ -35,3 +37,22 @@ flattened = flattened[['Date', 'Analytic Account', 'Description', 'General Accou
 print(flattened)
 
 flattened.to_csv(args[2], index=False)
+
+print("Horas totais registradas: " + str(np.sum(flattened['Quantity'])))
+
+#Verifica os possiveis dias que estão faltando
+def missingdays(start, end, list_dates):
+    while start.date() <= end.date():
+        if start.weekday() not in (5,6):
+            if start not in list_dates:
+                print("Possivel dia faltando: " + str(start))
+        start += timedelta(days=1)
+
+worked_days = []
+for date_time_flattened in flattened['Date']:
+    dateTime_flattened = datetime.strptime(date_time_flattened, '%d/%m/%Y')
+    worked_days.append(dateTime_flattened)
+
+start_date = datetime.strptime(flattened['Date'][0], '%d/%m/%Y')
+end_date = datetime.strptime(flattened['Date'][flattened.shape[0]-1], '%d/%m/%Y')
+missingdays(start_date, end_date, worked_days)
